@@ -1,6 +1,7 @@
 //! Theseus directory information
 use std::fs;
 use std::path::PathBuf;
+use futures::future::OrElse;
 
 use tokio::sync::RwLock;
 
@@ -25,6 +26,11 @@ impl DirectoryInfo {
             .or_else(|| Some(dirs::config_dir()?.join("com.modrinth.theseus")))
     }
 
+    pub fn get_initial_themes_dir() -> Option<PathBuf> {
+        Self::env_path("THESEUS_THEMES_DIR")
+          .or_else(|| Some(dirs::config_dir()?.join("com.modrinth.theseus").join("themes")))
+    }
+
     #[inline]
     pub fn get_initial_settings_file() -> crate::Result<PathBuf> {
         let settings_dir = Self::get_initial_settings_dir().ok_or(
@@ -33,6 +39,26 @@ impl DirectoryInfo {
             ),
         )?;
         Ok(settings_dir.join("settings.json"))
+    }
+
+    #[inline]
+    pub fn get_initial_light_theme_file() -> crate::Result<PathBuf> {
+        let themes_dir = Self::get_initial_themes_dir().ok_or(
+            crate::ErrorKind::FSError(
+                "Could not find valid themes dir".to_string(),
+            ),
+        )?;
+        Ok(themes_dir.join("light.json"))
+    }
+
+    #[inline]
+    pub fn get_initial_dark_theme_file() -> crate::Result<PathBuf> {
+        let themes_dir = Self::get_initial_themes_dir().ok_or(
+            crate::ErrorKind::FSError(
+                "Could not find valid themes dir".to_string(),
+            ),
+        )?;
+        Ok(themes_dir.join("dark.json"))
     }
 
     /// Get all paths needed for Theseus to operate properly
@@ -54,6 +80,18 @@ impl DirectoryInfo {
         fs::create_dir_all(&settings_dir).map_err(|err| {
             crate::ErrorKind::FSError(format!(
                 "Error creating Theseus config directory: {err}"
+            ))
+        })?;
+
+        let themes_dir = Self::get_initial_themes_dir().ok_or(
+            crate::ErrorKind::FSError(
+                "Could not find valid themes dir".to_string(),
+            ),
+        )?;
+
+        fs::create_dir_all(&themes_dir).map_err(|err| {
+            crate::ErrorKind::FSError(format!(
+                "Error creating Theseus themes directory: {err}"
             ))
         })?;
 

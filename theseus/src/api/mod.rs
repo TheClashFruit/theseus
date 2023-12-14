@@ -12,13 +12,14 @@ pub mod profile;
 pub mod safety;
 pub mod settings;
 pub mod tags;
+pub mod theme;
 
 pub mod data {
     pub use crate::state::{
         DirectoryInfo, Hooks, JavaSettings, LinkedData, MemorySettings,
         ModLoader, ModrinthCredentials, ModrinthCredentialsResult,
         ModrinthProject, ModrinthTeamMember, ModrinthUser, ModrinthVersion,
-        ProfileMetadata, ProjectMetadata, Settings, Theme, WindowSize,
+        ProfileMetadata, ProjectMetadata, Settings, WindowSize,
     };
 }
 

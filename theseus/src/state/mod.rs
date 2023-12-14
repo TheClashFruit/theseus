@@ -55,6 +55,9 @@ pub use self::discord::*;
 mod mr_auth;
 pub use self::mr_auth::*;
 
+mod theme;
+pub use self::theme::*;
+
 // Global state
 // RwLock on state only has concurrent reads, except for config dir change which takes control of the State
 static LAUNCHER_STATE: OnceCell<RwLock<State>> = OnceCell::const_new();

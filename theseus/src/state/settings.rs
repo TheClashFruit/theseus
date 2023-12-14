@@ -16,7 +16,7 @@ const CURRENT_FORMAT_VERSION: u32 = 1;
 /// Global Theseus settings
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Settings {
-    pub theme: Theme,
+    pub theme: SettingsTheme,
     pub memory: MemorySettings,
     #[serde(default)]
     pub force_fullscreen: bool,
@@ -86,7 +86,7 @@ impl Settings {
         } else {
             // Create new settings file
             let settings = Self {
-                theme: Theme::Dark,
+                theme: SettingsTheme::Dark,
                 memory: MemorySettings::default(),
                 force_fullscreen: false,
                 game_resolution: WindowSize::default(),
@@ -195,7 +195,7 @@ impl Settings {
 /// Theseus theme
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
-pub enum Theme {
+pub enum SettingsTheme {
     Dark,
     Light,
     Oled,
